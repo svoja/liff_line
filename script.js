@@ -1,4 +1,4 @@
-liff.init({ liffId: "YOUR_LIFF_ID" })
+liff.init({ liffId: "2006526744-9zLD3PAm" })
     .then(() => {
         console.log("LIFF initialized");
         // Further actions after initialization
