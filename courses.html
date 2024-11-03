@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <script src="script.js"></script>
+    <script src="script/script.js"></script>
 
     <style>
         body {
@@ -33,7 +33,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100%; /* Match the height of the image */
             background-color: rgba(0, 0, 0, 0.6); /* Black overlay with 60% opacity */
             display: flex;
             align-items: center;
@@ -42,9 +42,38 @@
             font-size: 48px;
             text-align: center;
         }
-    </style>
+        .modal-img {
+            max-height: 200px; /* Adjust to your preferred maximum height */
+            width: 100%;
+            object-fit: cover; /* Maintain aspect ratio */
+            position: relative; /* Make this relative for absolute positioning of overlay */
+        }
+        .modal-body {
+            position: relative; /* Make sure the body is relative for positioning */
+        }
+        .modal-body .overlay {
+            position: absolute; /* Position the overlay absolutely */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Match the height of the modal image */
+            background-color: rgba(0, 0, 0, 0.6); /* Black overlay with 60% opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 24px; /* Adjust font size as needed */
+            text-align: center;
+            opacity: 1; /* Always visible */
+            z-index: 1; /* Ensure it appears above the image */
+        }
+    </style>    
 </head>
 <body>
+    <div class="text-center my-3">
+        <h2>รายการวิชาเรียน</h2>
+    </div>
+    
     <!-- IMAGE BUTTONS -->
     <div class="container">
         <div class="row justify-content-center my-3" id="course-container">
@@ -52,36 +81,46 @@
         </div>
     </div>
 
-    <footer class="text-center mt-5">
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel">รายละเอียดวิชา</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body position-relative">
+                <div class="position-relative">
+                    <img id="modalImage" src="" alt="" class="img-fluid modal-img mb-3">
+                    <h5 id="modalName"></h5>
+                    <p id="modalDescription"></p>
+                    <p><strong>Price: </strong><span id="modalPrice"></span></p>
+
+                    <!-- Age and Quantity Inputs -->
+                    <div class="mb-3">
+                        <label for="childAge" class="form-label">อายุเด็ก (ปี)</label>
+                        <input type="number" class="form-control" id="childAge" min="0" placeholder="Enter age in years">
+                    </div>
+                    <div class="mb-3">
+                        <label for="childCount" class="form-label">จำนวนเด็ก</label>
+                        <input type="number" class="form-control" id="childCount" min="1" placeholder="Enter number of children">
+                    </div>
+
+                    <p><strong>Package: </strong><span id="packageResult"></span></p>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <footer class="text-center">
         <p>&copy; 2024 Baanbaimai. All rights reserved.</p>
     </footer>
-    <script>
-        async function loadCourses() {
-            try {
-                const response = await fetch('courses.json');
-                const courses = await response.json();
-    
-                const container = document.getElementById('course-container');
-                container.innerHTML = ''; // Clear existing content
-    
-                courses.forEach(course => {
-                    const courseHTML = `
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="${course.link}" class="image-btn">
-                                <img src="${course.image}" alt="${course.name}">
-                                <div class="overlay">${course.name}</div>
-                            </a>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', courseHTML);
-                });
-            } catch (error) {
-                console.error('Error loading courses:', error);
-            }
-        }
-    
-        document.addEventListener('DOMContentLoaded', loadCourses);
-    </script>
+    <script src="script/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>   
+</body>    
 </html>

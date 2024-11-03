@@ -69,25 +69,42 @@
 
     <!-- IMAGE BUTTONS -->
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-4 col-sm-6 mb-3">
-                <a href="courses.html" class="image-btn">
-                    <img src="img/courses.png" alt="เลือกวิชาเรียน">
-                    <div class="overlay">เลือกวิชาเรียน</div>
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-6 mb-3">
-                <a href="#" class="image-btn">
-                    <img src="img/payment.png" alt="ชำระค่าเรียน">
-                    <div class="overlay">ชำระค่าเรียน</div>
-                </a>
-            </div>
-        </div> 
+        <div class="row justify-content-center my-3" id="menu-container">
+            <!-- Courses will be dynamically added here -->
+        </div>
     </div>
 
     <footer class="text-center mt-5">
         <p>&copy; 2024 Baanbaimai. All rights reserved.</p>
     </footer>
+    <script>
+        async function loadMainMenu() {
+            try {
+                const response = await fetch('models/menus.json');
+                const menus = await response.json();
+    
+                const container = document.getElementById('menu-container');
+                container.innerHTML = ''; // Clear existing content
+    
+                menus.forEach(menu => {
+                    const menuHTML = `
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="${menu.link}" class="image-btn">
+                                <img src="${menu.image}" alt="${menu.name}">
+                                <div class="overlay">${menu.name}</div>
+                            </a>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', menuHTML);
+                });
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', loadMainMenu);
+        
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>   
 </html>

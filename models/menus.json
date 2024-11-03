@@ -1,0 +1,14 @@
+[
+    {   
+        "menu_id": "1",
+        "name": "เลือกวิชาเรียน",
+        "image": "img/courses.png",
+        "link": "courses.html"
+    },
+    {
+        "menu_id": "2",
+        "name": "จ่ายค่าเรียน",
+        "image": "img/payment.png",
+        "link": "#"
+    }
+]
