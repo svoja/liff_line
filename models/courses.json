@@ -3,16 +3,16 @@
         "subject_id": "1",
         "name": "ว่ายน้ำ",
         "image": "img/swimming.jpg",
-        "price_single": 7000,
-        "price_group": 4600,
         "age_ranges": {
             "single": {
                 "9m_to_2y": 7000,
                 "3_to_12": 5000
             },
             "duo": {
-                "3_to_4": 3500,
-                "3_to_12": 4600
+                "3_to_12": 4200
+            },
+            "group": {
+                "3_to_4": 3500
             }
         },
         "description": "ว่ายน้ำสำหรับเด็กเล็กและเด็กโต"

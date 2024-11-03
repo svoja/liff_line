@@ -61,7 +61,7 @@ function calculatePackage(course) {
     // Check if both child age and child count are provided
     if (isNaN(childAge) || isNaN(childCount)) {
         document.getElementById('modalPrice').innerText = ''; // Clear price display
-        document.getElementById('packageResult').innerText = 'กรุณากรอกข้อมูลอายุและจำนวนเด็ก.'; // Please enter age and number of children
+        document.getElementById('packageResult').innerText = 'กรุณากรอกข้อมูลอายุและจำนวนเด็ก'; // Please enter age and number of children
         return; // Exit the function
     }
 
@@ -70,22 +70,24 @@ function calculatePackage(course) {
         // Only Single Package available for ages 0 to 2
         if (childCount === 1) {
             price = course.age_ranges.single['9m_to_2y']; // Adjust according to JSON structure
-            packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี.` : 'ไม่มีแพ็กเกจสำหรับอายุนี้.';
+            packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
         } else {
-            packageResult = 'ไม่มีแพ็กเกจสำหรับจำนวนเด็กมากกว่าหนึ่งคนในอายุนี้.'; // No packages for more than one child in this age
+            packageResult = 'ไม่มีแพ็กเกจสำหรับจำนวนเด็กมากกว่าหนึ่งคนในอายุนี้'; // No packages for more than one child in this age
         }
     } else if (childAge >= 3 && childAge <= 12) {
+        // Age 3 to 12 handling
         if (childCount === 1) {
-            price = course.age_ranges.single['3_to_12']; // Adjust according to JSON structure
-            packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี.` : 'ไม่มีแพ็กเกจสำหรับอายุนี้.';
-        } else if (childCount > 1) {
-            if (childAge <= 4) {
-                price = course.age_ranges.duo['3_to_4']; // Adjust according to JSON structure
-                packageResult = price ? `แพ็กเกจคู่สำหรับอายุ ${childAge} ปี.` : 'ไม่มีแพ็กเกจสำหรับอายุนี้.';
-            } else {
-                price = course.age_ranges.duo['3_to_12']; // Adjust according to JSON structure
-                packageResult = price ? `แพ็กเกจคู่สำหรับอายุ ${childAge} ปี.` : 'ไม่มีแพ็กเกจสำหรับอายุนี้.';
-            }
+            price = course.age_ranges.single['3_to_12']; // Solo package for age 3 to 12
+            packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
+        } else if (childCount === 2) {
+            price = course.age_ranges.duo['3_to_12']; // Duo package for age 3 to 12
+            packageResult = price ? `แพ็กเกจคู่สำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
+        } else if (childCount >= 3 && childCount <= 4) {
+            // Group package for 3-4 children, age does not matter
+            packageResult = `แพ็กเกจกลุ่มสำหรับเด็ก ${childCount} คน`; // Group package available
+            price = course.age_ranges.group['3_to_4']; // Price for group package
+        } else {
+            packageResult = "ไม่มีแพ็กเกจที่ว่างสำหรับจำนวนเด็กนี้"; // No available package for this number of children
         }
     } else {
         packageResult = "อายุที่ป้อนไม่ถูกต้อง."; // Invalid age entered
@@ -95,4 +97,9 @@ function calculatePackage(course) {
     document.getElementById('packageResult').innerText = packageResult; // Show the package result
 }
 
-document.addEventListener('DOMContentLoaded', loadCourses);
+document.addEventListener('DOMContentLoaded', function() {
+    loadCourses(); // Call your loadCourses function
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        alert("ยังไม่ได้ทำจ้า");
+    });
+});

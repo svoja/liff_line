@@ -94,24 +94,25 @@
                     <img id="modalImage" src="" alt="" class="img-fluid modal-img mb-3">
                     <h5 id="modalName"></h5>
                     <p id="modalDescription"></p>
-                    <p><strong>Price: </strong><span id="modalPrice"></span></p>
+                    <p><strong>ราคา : </strong><span id="modalPrice"></span></p>
 
                     <!-- Age and Quantity Inputs -->
                     <div class="mb-3">
                         <label for="childAge" class="form-label">อายุเด็ก (ปี)</label>
-                        <input type="number" class="form-control" id="childAge" min="0" placeholder="Enter age in years">
+                        <input type="number" class="form-control" id="childAge" min="0" placeholder="โปรดใส่อายุเช่น 1">
                     </div>
                     <div class="mb-3">
                         <label for="childCount" class="form-label">จำนวนเด็ก</label>
-                        <input type="number" class="form-control" id="childCount" min="1" placeholder="Enter number of children">
+                        <input type="number" class="form-control" id="childCount" min="1" placeholder="โปรดใส่จำนวนเช่น 2">
                     </div>
 
-                    <p><strong>Package: </strong><span id="packageResult"></span></p>
+                    <p><strong>แพ๊กเกจ   : </strong><span id="packageResult"></span></p>
                 </div>
             </div>
             
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button id="submitBtn" type="button" class="btn btn-primary">ยืนยัน</button>
             </div>
         </div>
     </div>
