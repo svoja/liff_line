@@ -1,20 +1,54 @@
 [
     {
-        "subject_id": "1",
-        "name": "ว่ายน้ำ",
-        "image": "img/swimming.jpg",
-        "age_ranges": {
-            "single": {
-                "9m_to_2y": 7000,
-                "3_to_12": 5000
-            },
-            "duo": {
-                "3_to_12": 4200
-            },
-            "group": {
-                "3_to_4": 3500
-            }
+      "subject_id": 1,
+      "subject_name": "ว่ายน้ำ",
+      "type_name": "ออกกำลังกาย",
+      "type_id": 1,
+      "image": "img/swimming.jpg",
+      "age_ranges": {
+        "single": {
+          "9m_to_2y": 7000,
+          "3_to_12": 5000
         },
-        "description": "ว่ายน้ำสำหรับเด็กเล็กและเด็กโต"
+        "duo": {
+          "3_to_12": 4200
+        },
+        "group": {
+          "3_to_4": 3500
+        }
+      },
+      "description": "ว่ายน้ำสำหรับเด็กเล็กและเด็กโต"
+    },
+    {
+      "subject_id": 2,
+      "subject_name": "เปียโน",
+      "type_name": "ดนตรี",
+      "type_id": 2,
+      "image": "img/piano.jpg",
+      "age_ranges": {
+        "single": {
+          "age_unrestricted": 2400
+        },
+        "group": {
+          "age_unrestricted": 1600
+        }
+      },
+      "description": "เล่นเปียโนให้คล่อง"
+    },
+    {
+      "subject_id": 3,
+      "subject_name": "ตีกลอง",
+      "type_name": "ดนตรี",
+      "type_id": 2,
+      "image": "img/drumset.jpg",
+      "age_ranges": {
+        "single": {
+          "age_unrestricted": 2400
+        },
+        "group": {
+          "age_unrestricted": 1600
+        }
+      },
+      "description": "ตีกลองมันๆ"
     }
-]
+  ]

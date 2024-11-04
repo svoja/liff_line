@@ -7,8 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="script.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
 
     <style>
         body {
@@ -20,7 +21,7 @@
             position: relative;
             display: block;
             width: 100%;
-            height: 150px; /* Scaled down for 400x150 display */
+            height: 150px; /* Adjust as needed */
             overflow: hidden;
         }
         .image-btn img {
@@ -42,30 +43,17 @@
             font-size: 48px;
             text-align: center;
         }
-        .modal-img {
-            max-height: 200px; /* Adjust to your preferred maximum height */
-            width: 100%;
-            object-fit: cover; /* Maintain aspect ratio */
-            position: relative; /* Make this relative for absolute positioning of overlay */
-        }
-        .modal-body {
-            position: relative; /* Make sure the body is relative for positioning */
-        }
-        .modal-body .overlay {
-            position: absolute; /* Position the overlay absolutely */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%; /* Match the height of the modal image */
-            background-color: rgba(0, 0, 0, 0.6); /* Black overlay with 60% opacity */
+        .add-course-btn {
+            background-color: #d3d3d3; /* Light grey color */
+            border: none;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            font-size: 24px; /* Adjust font size as needed */
-            text-align: center;
-            opacity: 1; /* Always visible */
-            z-index: 1; /* Ensure it appears above the image */
+            height: 150px; /* Same height as image buttons */
+            cursor: pointer;
+            font-size: 48px; /* Font size for the "+" */
+            color: #333; /* Color for "+" */
         }
     </style>    
 </head>
@@ -78,49 +66,112 @@
     <div class="container">
         <div class="row justify-content-center my-3" id="course-container">
             <!-- Courses will be dynamically added here -->
-        </div>
-    </div>
-
-<!-- Bootstrap Modal -->
-<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="courseModalLabel">รายละเอียดวิชา</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body position-relative">
-                <div class="position-relative">
-                    <img id="modalImage" src="" alt="" class="img-fluid modal-img mb-3">
-                    <h5 id="modalName"></h5>
-                    <p id="modalDescription"></p>
-                    <p><strong>ราคา : </strong><span id="modalPrice"></span></p>
-
-                    <!-- Age and Quantity Inputs -->
-                    <div class="mb-3">
-                        <label for="childAge" class="form-label">อายุเด็ก (ปี)</label>
-                        <input type="number" class="form-control" id="childAge" min="0" placeholder="โปรดใส่อายุเช่น 1">
-                    </div>
-                    <div class="mb-3">
-                        <label for="childCount" class="form-label">จำนวนเด็ก</label>
-                        <input type="number" class="form-control" id="childCount" min="1" placeholder="โปรดใส่จำนวนเช่น 2">
-                    </div>
-
-                    <p><strong>แพ๊กเกจ   : </strong><span id="packageResult"></span></p>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="add-course-btn" id="addCourseBtn" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                    <span>+</span>
                 </div>
             </div>
-            
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button id="submitBtn" type="button" class="btn btn-primary">ยืนยัน</button>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Modal for Adding Course -->
+    <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCourseModalLabel">Add New Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCourseForm">
+                        <div class="mb-3">
+                            <label for="courseName" class="form-label">Course Name</label>
+                            <input type="text" class="form-control" id="courseName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseType" class="form-label">Course Type</label>
+                            <select class="form-select" id="courseType" required>
+                                <option value="" disabled selected>Select course type</option>
+                                <!-- Course types will be dynamically added here -->
+                            </select>
+                        </div>                        
+                        <div class="mb-3">
+                            <label for="courseImage" class="form-label">Course Image</label>
+                            <input type="file" class="form-control" id="courseImage" accept="image/*" required>
+                        </div>                        
+                        <div class="mb-3">
+                            <label for="courseDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="courseDescription" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitCourseBtn">Add Course</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Bootstrap Modal for Course Details -->
+    <div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courseModalLabel">รายละเอียดวิชา</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body position-relative">
+                    <div class="position-relative">
+                        <img id="modalImage" src="" alt="" class="img-fluid modal-img mb-3">
+                        <h5 id="modalName"></h5>
+                        <p id="modalDescription"></p>
+                        <p><strong>ราคา : </strong><span id="modalPrice"></span></p>
+
+                        <!-- Age and Quantity Inputs -->
+                        <div class="mb-3">
+                            <label for="childAge" class="form-label">อายุเด็ก (ปี)</label>
+                            <input type="number" class="form-control" id="childAge" min="0" placeholder="โปรดใส่อายุเช่น 1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="childCount" class="form-label">จำนวนเด็ก</label>
+                            <input type="number" class="form-control" id="childCount" min="1" placeholder="โปรดใส่จำนวนเช่น 2">
+                        </div>
+
+                        <p><strong>แพ๊กเกจ : </strong><span id="packageResult"></span></p>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <button id="submitBtn" type="button" class="btn btn-primary">ยืนยัน</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="text-center">
         <p>&copy; 2024 Baanbaimai. All rights reserved.</p>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>    
+    <script>
+        document.getElementById('submitCourseBtn').addEventListener('click', function() {
+            const courseName = document.getElementById('courseName').value;
+            const courseType = document.getElementById('courseType').value;
+            const courseImage = document.getElementById('courseImage').value;
+            const courseDescription = document.getElementById('courseDescription').value;
+
+            // Logic to save the new course data goes here (e.g., add to JSON file or update UI)
+            console.log('New Course:', { courseName, courseType, courseImage, courseDescription });
+
+            // Close the modal after submission
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addCourseModal'));
+            modal.hide();
+
+            // Clear the form fields
+            document.getElementById('addCourseForm').reset();
+        });
+    </script>
+</body>
 </html>

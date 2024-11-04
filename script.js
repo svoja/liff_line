@@ -1,37 +1,47 @@
+const apiUrl = 'https://6728186d270bd0b975544d1e.mockapi.io/api/bbm/courses'; // Your actual mock API URL
+const courses_type_apiUrl = 'https://6728186d270bd0b975544d1e.mockapi.io/api/bbm/courses_type'; // Your actual mock API URL
+
+
 async function loadCourses() {
     try {
-        const response = await fetch('models/courses.json');
+        // Fetching from the MockAPI endpoint
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
         const courses = await response.json();
 
         const container = document.getElementById('course-container');
+        const addCourseButton = document.getElementById('addCourseBtn');
         container.innerHTML = ''; // Clear existing content
 
         courses.forEach(course => {
             const courseHTML = `
             <div class="col-md-4 col-sm-6 mb-3">
                 <a href="#" class="image-btn" onclick="showCourseModal('${course.subject_id}', '${course.image}')">
-                    <img src="${course.image}" alt="${course.name}">
-                    <div class="overlay">${course.name}</div>
+                    <img src="${course.image}" alt="${course.subject_name}">
+                    <div class="overlay">${course.subject_name}</div>
                 </a> 
             </div>
             `;
             container.insertAdjacentHTML('beforeend', courseHTML);
+            container.appendChild(addCourseButton.parentNode);
         });
     } catch (error) {
-        console.error('Error loading courses:', error);
+        console.error('Error fetching data:', error);
     }
 }
 
 async function showCourseModal(subject_id, imageUrl) {
     try {
-        const response = await fetch('models/courses.json');
+        const response = await fetch(apiUrl); // Fetch from the mock API
         const courses = await response.json();
         
-        const course = courses.find(c => c.subject_id === subject_id);
+        const course = courses.find(c => c.subject_id === parseInt(subject_id)); // Ensure subject_id is compared as a number
         if (course) {
             document.getElementById('modalImage').src = imageUrl;
-            document.getElementById('modalName').innerText = course.name;
-            document.getElementById('modalDescription').innerText = course.description || 'ไม่มีข้อมูล';
+            document.getElementById('modalName').innerText = course.subject_name; // Updated property name
+            document.getElementById('modalDescription').innerText = course.description || 'ไม่มีข้อมูล'; // No data
 
             // Clear previous inputs and results in the modal
             document.getElementById('childAge').value = ''; 
@@ -65,32 +75,46 @@ function calculatePackage(course) {
         return; // Exit the function
     }
 
-    // Determine the package based on age and number of children
-    if (childAge >= 0 && childAge < 3) {
-        // Only Single Package available for ages 0 to 2
-        if (childCount === 1) {
-            price = course.age_ranges.single['9m_to_2y']; // Adjust according to JSON structure
-            packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
+    // Determine the package based on type_id and age/number of children
+    if (course.type_id === 1) { // Match by type_id for exercise courses
+        if (childAge >= 0 && childAge < 3) {
+            // Only Single Package available for ages 0 to 2
+            if (childCount === 1) {
+                price = course.age_ranges.single['9m_to_2y'];
+                packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้';
+            } else {
+                packageResult = 'ไม่มีแพ็กเกจสำหรับจำนวนเด็กมากกว่าหนึ่งคนในอายุนี้'; // No packages for more than one child in this age
+            }
+        } else if (childAge >= 3 && childAge <= 12) {
+            // Age 3 to 12 handling
+            if (childCount === 1) {
+                price = course.age_ranges.single['3_to_12'];
+                packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
+            } else if (childCount === 2) {
+                price = course.age_ranges.duo['3_to_12'];
+                packageResult = price ? `แพ็กเกจคู่สำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
+            } else if (childCount >= 3 && childCount <= 4) {
+                price = course.age_ranges.group['3_to_4'];
+                packageResult = price ? `แพ็กเกจกลุ่มสำหรับเด็ก ${childCount} คน` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
+            } else {
+                packageResult = "ไม่มีแพ็กเกจที่ว่างสำหรับจำนวนเด็กนี้"; // No available package for this number of children
+            }
         } else {
-            packageResult = 'ไม่มีแพ็กเกจสำหรับจำนวนเด็กมากกว่าหนึ่งคนในอายุนี้'; // No packages for more than one child in this age
+            packageResult = "อายุที่ป้อนไม่ถูกต้อง."; // Invalid age entered
         }
-    } else if (childAge >= 3 && childAge <= 12) {
-        // Age 3 to 12 handling
+    } else if (course.type_id === 2) { // Match by type_id for music courses
+        // Handle music packages
         if (childCount === 1) {
-            price = course.age_ranges.single['3_to_12']; // Solo package for age 3 to 12
+            price = course.age_ranges.single['age_unrestricted'];
             packageResult = price ? `แพ็กเกจเดี่ยวสำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
-        } else if (childCount === 2) {
-            price = course.age_ranges.duo['3_to_12']; // Duo package for age 3 to 12
-            packageResult = price ? `แพ็กเกจคู่สำหรับอายุ ${childAge} ปี` : 'ไม่มีแพ็กเกจสำหรับอายุนี้'; // Package available for age
-        } else if (childCount >= 3 && childCount <= 4) {
-            // Group package for 3-4 children, age does not matter
+        } else if (childCount >= 2) {
+            price = course.age_ranges.group['age_unrestricted'];
             packageResult = `แพ็กเกจกลุ่มสำหรับเด็ก ${childCount} คน`; // Group package available
-            price = course.age_ranges.group['3_to_4']; // Price for group package
         } else {
             packageResult = "ไม่มีแพ็กเกจที่ว่างสำหรับจำนวนเด็กนี้"; // No available package for this number of children
         }
     } else {
-        packageResult = "อายุที่ป้อนไม่ถูกต้อง."; // Invalid age entered
+        packageResult = "ไม่พบคอร์สที่เลือก."; // Course not found
     }
 
     document.getElementById('modalPrice').innerText = price ? `$${price}` : 'ติดต่อผู้ดูแลสำหรับสอบถามข้อมูล'; // Contact admin for inquiries
@@ -102,4 +126,25 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('submitBtn').addEventListener('click', function() {
         alert("ยังไม่ได้ทำจ้า");
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to load course types from JSON
+    function loadCourseTypes() {
+        fetch(courses_type_apiUrl) // Update with the correct path to your JSON file
+            .then(response => response.json())
+            .then(data => {
+                const courseTypeSelect = document.getElementById('courseType');
+                data.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.type_id;
+                    option.textContent = type.type_name;
+                    courseTypeSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading course types:', error));
+    }
+
+    // Call the function to load course types
+    loadCourseTypes();
 });
